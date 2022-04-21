@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
+from sklearn.metrics import f1_score
 
 from sklearn import tree
 from sklearn.tree import plot_tree
@@ -29,8 +30,8 @@ dataFeatures = pd.DataFrame(data, columns=['Events | Median (HLA DR-FITC)',
 dataLabels = pd.DataFrame(data, columns=['AML?'])
 
 # debug print
-print("dataFeatures: ", dataFeatures)
-print("dataLabels: ", dataLabels)
+# print("dataFeatures: ", dataFeatures)
+# print("dataLabels: ", dataLabels)
 # -------------------------------------------------------------------
 
 # DATA PREP - DECISION TREE (many refs to naive bayes data prep)
@@ -58,7 +59,7 @@ def gauss_naive_bayes(test_size=0.25):
     If int, represents the absolute number of test samples.
     '''
     n = test_size
-    X_train, X_test, y_train, y_test = train_test_split(dataFeatures, dataLabels, test_size=n, random_state=50)
+    X_train, X_test, y_train, y_test = train_test_split(dataFeatures, dataLabels, test_size=n, random_state=53)
     
     gnb = GaussianNB()
     
@@ -67,6 +68,10 @@ def gauss_naive_bayes(test_size=0.25):
     y_pred = gnb.predict(X_test)
     
     print("Gaussian Naive Bayes accuracy_score: ", metrics.accuracy_score(y_test, y_pred))
+    print("Gaussian Naive Bayes CrossValidate: ", gnb.score(X_test, y_test))
+    print("Gaussian Naive Bayes F1 Score: ", f1_score(y_test, y_pred))
+    print(y_test)
+    print(y_pred)
     return metrics.accuracy_score(y_test, y_pred)
 
 def decision_tree():
@@ -91,7 +96,7 @@ def forest_random_tree(test_size=0.25):
     If int, represents the absolute number of test samples.
     '''
     n = test_size
-    X_train, X_test, y_train, y_test = train_test_split(frt_x, frt_y, test_size=n, random_state=50)
+    X_train, X_test, y_train, y_test = train_test_split(frt_x, frt_y, test_size=n, random_state=53)
 
     clf = RandomForestClassifier(n_estimators=100)
 
@@ -100,6 +105,10 @@ def forest_random_tree(test_size=0.25):
     y_pred = clf.predict(X_test)
     
     print("RandomForest accuracy_score: ", metrics.accuracy_score(y_test, y_pred))
+    print("RandomForest CrossValidate: ", clf.score(X_test, y_test))
+    print("RandomForest F1 Score: ", f1_score(y_test, y_pred))
+    # print(y_test)
+    # print(y_pred)
     return metrics.accuracy_score(y_test, y_pred)
 # -------------------------------------------------------------------
 
